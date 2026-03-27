@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FlightDay — Drone Competition Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:#F4F4F2;color:#1a1a1a;min-height:100vh}
+:root{--blue:#1D6DE8;--sky:#38BDF8;--navy:#0B1A38;--bg:#F4F4F2;--card:#fff;--border:#E2E2DC;--text:#1a1a1a;--muted:#6B6B66;--surface:#F0EFEA}
+.nav{background:var(--navy);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100}
+.nav-brand{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:2px;display:flex;align-items:center;gap:10px}
+.drone-icon{display:flex}
+.nav-links{display:flex;gap:4px}
+.nav-link{background:none;border:none;color:rgba(255,255,255,0.55);font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;padding:8px 16px;border-radius:6px;cursor:pointer;transition:all 0.15s}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.nav-link.active{color:var(--sky);background:rgba(56,189,248,0.12)}
+.nav-cta{background:var(--blue);border:none;color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;padding:9px 20px;border-radius:7px;cursor:pointer}
+
+/* HERO */
+.hero{background:var(--navy);padding:72px 32px 80px;text-align:center;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;opacity:0.05;background-image:linear-gradient(var(--sky) 1px,transparent 1px),linear-gradient(90deg,var(--sky) 1px,transparent 1px);background-size:44px 44px}
+.hero-content{position:relative;z-index:1;max-width:640px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.28);color:var(--sky);font-size:11px;font-weight:500;padding:5px 16px;border-radius:20px;margin-bottom:22px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.8px}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:700;color:#fff;line-height:1.0;margin-bottom:18px;letter-spacing:1px}
+.hero h1 span{color:var(--sky)}
+.hero p{color:rgba(255,255,255,0.55);font-size:16px;line-height:1.65;margin-bottom:36px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--blue);border:none;color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:500;padding:12px 28px;border-radius:8px;cursor:pointer}
+.btn-outline{background:none;border:1px solid rgba(255,255,255,0.22);color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:500;padding:12px 28px;border-radius:8px;cursor:pointer}
+.hero-stats{display:flex;justify-content:center;margin-top:64px;border-top:1px solid rgba(255,255,255,0.08);padding-top:40px}
+.stat{padding:0 44px;text-align:center;border-right:1px solid rgba(255,255,255,0.08)}
+.stat:last-child{border-right:none}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:700;color:var(--sky)}
+.stat-lbl{font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.5px}
+
+/* SECTIONS */
+.section{max-width:980px;margin:0 auto;padding:56px 32px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:700;color:var(--text);letter-spacing:0.5px;margin-bottom:6px}
+.section-sub{font-size:13px;color:var(--muted);margin-bottom:28px}
+.mission-card{display:flex;gap:14px;padding:14px 16px;background:var(--card);border:0.5px solid var(--border);border-radius:8px;margin-bottom:10px}
+.mission-icon{font-size:20px;line-height:1;margin-top:2px;flex-shrink:0}
+.mission-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.mission-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.date-row{display:flex;gap:16px;align-items:flex-start;padding:13px 16px;background:var(--card);border:0.5px solid var(--border);border-radius:8px;margin-bottom:10px}
+.date-badge{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--blue);background:rgba(29,109,232,0.1);padding:4px 10px;border-radius:4px;white-space:nowrap;margin-top:1px;min-width:72px;text-align:center}
+.date-label{font-size:13px;font-weight:500;color:var(--text)}
+.date-desc{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* PAGE HEADER */
+.page-header{background:var(--navy);padding:32px 32px 0}
+.ph-inner{max-width:980px;margin:0 auto}
+.ph-inner h2{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:700;color:#fff;letter-spacing:0.5px}
+.ph-inner p{color:rgba(255,255,255,0.45);font-size:13px;margin-top:4px;padding-bottom:0}
+.steps-bar{max-width:980px;margin:0 auto;display:flex;margin-top:20px}
+.step-item{flex:1;padding:10px 16px 14px;border-bottom:3px solid rgba(255,255,255,0.08);cursor:pointer}
+.step-item.active{border-bottom-color:var(--sky)}
+.step-item.done{border-bottom-color:rgba(56,189,248,0.35);cursor:pointer}
+.step-num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:2px;letter-spacing:0.5px}
+.step-item.active .step-num,.step-item.done .step-num{color:var(--sky)}
+.step-label{font-size:12px;font-weight:500;color:rgba(255,255,255,0.4)}
+.step-item.active .step-label{color:#fff}
+.step-item.done .step-label{color:rgba(255,255,255,0.45)}
+
+/* FORMS */
+.form-wrap{max-width:700px;margin:36px auto;padding:0 32px 60px}
+.form-card{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:32px}
+.form-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px}
+.form-desc{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-row.single{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0.5px;font-family:'IBM Plex Mono',monospace}
+.form-input{background:var(--surface);border:0.5px solid var(--border);border-radius:7px;padding:10px 13px;font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border 0.15s;width:100%}
+.form-input:focus{border-color:var(--blue)}
+.form-select{background:var(--surface);border:0.5px solid var(--border);border-radius:7px;padding:10px 13px;font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:var(--text);outline:none;width:100%}
+.divider{border:none;border-top:0.5px solid var(--border);margin:22px 0}
+.form-actions{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:20px;border-top:0.5px solid var(--border)}
+.btn-next{background:var(--blue);border:none;color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:500;padding:10px 26px;border-radius:7px;cursor:pointer}
+.btn-back{background:none;border:0.5px solid var(--border);color:var(--muted);font-family:'IBM Plex Sans',sans-serif;font-size:13px;padding:10px 20px;border-radius:7px;cursor:pointer}
+
+/* STUDENTS TABLE */
+.stu-table{width:100%;border-collapse:collapse;margin-top:10px}
+.stu-table th{font-size:10px;font-weight:500;color:var(--muted);text-align:left;padding:8px 12px;border-bottom:0.5px solid var(--border);letter-spacing:0.5px;font-family:'IBM Plex Mono',monospace}
+.stu-table td{font-size:13px;color:var(--text);padding:10px 12px;border-bottom:0.5px solid var(--border)}
+.add-btn{width:100%;margin-top:12px;background:var(--surface);border:1px dashed var(--border);color:var(--muted);font-family:'IBM Plex Sans',sans-serif;font-size:13px;padding:10px;border-radius:7px;cursor:pointer}
+
+/* WAIVERS */
+.waiver-box{background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:16px;height:160px;overflow-y:auto;font-size:12px;color:var(--muted);line-height:1.75;margin-bottom:16px}
+.student-waiver{margin-bottom:14px;padding:16px;background:var(--surface);border-radius:8px;border:0.5px solid var(--border)}
+.checkbox-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.checkbox-row input{margin-top:3px;accent-color:var(--blue)}
+.checkbox-row label{font-size:13px;color:var(--text)}
+.sig-box{border:0.5px solid var(--border);border-radius:6px;padding:12px 16px;background:var(--card);font-size:13px;color:var(--muted);height:52px;display:flex;align-items:center;gap:8px}
+.sig-name{font-style:italic;color:var(--text);font-size:14px}
+
+/* PAYMENT */
+.pay-summary{background:var(--surface);border-radius:8px;padding:18px;margin-bottom:20px}
+.pay-row{display:flex;justify-content:space-between;padding:7px 0;font-size:13px;color:var(--muted);border-bottom:0.5px solid var(--border)}
+.pay-row:last-child{border:none;font-weight:600;font-size:15px;color:var(--text);padding-top:12px}
+.pay-row span:last-child{font-family:'IBM Plex Mono',monospace}
+.card-badges{display:flex;gap:8px;margin-bottom:16px}
+.cb{background:var(--surface);border:0.5px solid var(--border);border-radius:4px;padding:4px 12px;font-size:11px;font-weight:500;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.ssl-note{font-size:12px;color:var(--muted);margin-top:10px;display:flex;align-items:center;gap:6px}
+
+/* SUCCESS */
+.success-card{text-align:center;padding:48px 32px}
+.success-icon{width:68px;height:68px;background:rgba(29,109,232,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:30px;color:var(--blue)}
+.success-card h2{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:700;color:var(--text);margin-bottom:8px}
+.success-card p{font-size:14px;color:var(--muted);line-height:1.65;max-width:380px;margin:0 auto 20px}
+.team-id-badge{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;color:var(--blue);background:rgba(29,109,232,0.1);padding:10px 24px;border-radius:7px;display:inline-block;margin-bottom:24px}
+.next-steps{margin-top:24px;padding:16px;background:var(--surface);border-radius:8px;text-align:left}
+.ns-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.4px}
+.ns-item{font-size:12px;color:var(--muted);padding:6px 0;border-top:0.5px solid var(--border)}
+
+/* EVENTS */
+.events-filters{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap;align-items:center}
+.filter-btn{background:var(--surface);border:0.5px solid var(--border);color:var(--muted);font-family:'IBM Plex Sans',sans-serif;font-size:13px;padding:7px 16px;border-radius:6px;cursor:pointer}
+.filter-btn.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.div-select{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:7px 12px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:var(--text);outline:none;margin-left:auto}
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.event-card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
+.event-hd{background:var(--navy);padding:18px 20px}
+.ev-type{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--sky);letter-spacing:1.2px;margin-bottom:6px}
+.ev-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#fff}
+.ev-date{font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px}
+.event-body{padding:18px 20px}
+.ev-meta{font-size:12px;color:var(--muted);margin-bottom:14px;display:flex;flex-direction:column;gap:5px}
+.ev-meta span{display:flex;align-items:center;gap:7px}
+.ev-dot{width:4px;height:4px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.cap-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:5px;overflow:hidden}
+.cap-fill{height:100%;border-radius:2px}
+.cap-label{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:14px}
+.ev-btn{width:100%;background:var(--blue);border:none;color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;padding:9px;border-radius:6px;cursor:pointer}
+.ev-btn.full{background:var(--surface);color:var(--muted);cursor:default;border:0.5px solid var(--border)}
+
+/* DASHBOARD */
+.dash-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.metric{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:18px}
+.metric-lbl{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:0.5px;margin-bottom:8px}
+.metric-val{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:700;color:var(--text)}
+.metric-sub{font-size:11px;color:var(--blue);margin-top:4px}
+.tbl-card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px}
+.tbl-head{padding:16px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border)}
+.tbl-title{font-size:14px;font-weight:600;color:var(--text)}
+.tbl-search{background:var(--surface);border:0.5px solid var(--border);border-radius:6px;padding:7px 13px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--text);outline:none;width:200px}
+.data-tbl{width:100%;border-collapse:collapse}
+.data-tbl th{font-size:10px;font-weight:500;color:var(--muted);text-align:left;padding:10px 22px;border-bottom:0.5px solid var(--border);letter-spacing:0.5px;font-family:'IBM Plex Mono',monospace;background:var(--surface)}
+.data-tbl td{font-size:13px;color:var(--text);padding:12px 22px;border-bottom:0.5px solid var(--border)}
+.data-tbl tr:last-child td{border-bottom:none}
+.data-tbl tr:hover td{background:var(--surface)}
+.status-pill{font-size:11px;font-weight:500;padding:3px 10px;border-radius:10px;font-family:'IBM Plex Mono',monospace}
+.s-paid{background:rgba(16,185,129,0.1);color:#059669}
+.s-pending{background:rgba(245,158,11,0.1);color:#D97706}
+.s-waiver{background:rgba(239,68,68,0.1);color:#DC2626}
+.div-pill{font-size:11px;font-weight:500;padding:3px 9px;border-radius:4px}
+.d-ms{background:rgba(56,189,248,0.12);color:#0284C7}
+.d-hs{background:rgba(139,92,246,0.12);color:#7C3AED}
+
+/* BRACKET */
+.bracket-card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:22px}
+.bracket-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:18px}
+.bracket{display:flex;gap:0;overflow-x:auto;padding-bottom:10px}
+.b-col{display:flex;flex-direction:column}
+.b-col-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.8px;padding:0 16px 14px;text-align:center}
+.match{background:var(--surface);border:0.5px solid var(--border);border-radius:7px;width:148px;margin:0 8px 10px;overflow:hidden}
+.match.final{border-color:var(--blue);border-width:1px}
+.mt{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;font-size:12px}
+.mt.win{background:rgba(29,109,232,0.07);font-weight:600;color:var(--text)}
+.mt.lose{color:var(--muted)}
+.ms{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500}
+.mt-div{height:0.5px;background:var(--border)}
+.b-arrow{display:flex;align-items:center;color:var(--border);font-size:18px;padding:0 2px}
+.b-spacer{height:74px}
+.live-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue);text-align:center;margin-top:6px;letter-spacing:0.5px}
+
+/* PAGE VISIBILITY */
+.page{display:none}
+.page.active{display:block}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+      <circle cx="7" cy="7" r="3" fill="#38BDF8" opacity="0.8"/>
+      <circle cx="21" cy="7" r="3" fill="#38BDF8" opacity="0.8"/>
+      <circle cx="7" cy="21" r="3" fill="#38BDF8" opacity="0.8"/>
+      <circle cx="21" cy="21" r="3" fill="#38BDF8" opacity="0.8"/>
+      <rect x="10" y="10" width="8" height="8" rx="2" fill="#38BDF8"/>
+      <line x1="7" y1="7" x2="10" y2="10" stroke="#38BDF8" stroke-width="1.5" opacity="0.5"/>
+      <line x1="21" y1="7" x2="18" y2="10" stroke="#38BDF8" stroke-width="1.5" opacity="0.5"/>
+      <line x1="7" y1="21" x2="10" y2="18" stroke="#38BDF8" stroke-width="1.5" opacity="0.5"/>
+      <line x1="21" y1="21" x2="18" y2="18" stroke="#38BDF8" stroke-width="1.5" opacity="0.5"/>
+    </svg>
+    FLIGHTDAY
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('home',this)">Home</button>
+    <button class="nav-link" onclick="showPage('events',this)">Events</button>
+    <button class="nav-link" onclick="showPage('register',this)">Register</button>
+    <button class="nav-link" onclick="showPage('dashboard',this)">Admin</button>
+  </div>
+  <button class="nav-cta" onclick="showPage('register',null)">Register Team</button>
+</nav>
+
+<!-- ============ HOME ============ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">✦ SEASON 2025–2026 NOW OPEN</div>
+      <h1>TAKE FLIGHT.<br/><span>WIN THE SKY.</span></h1>
+      <p>The mid-Atlantic's premier K–12 drone competition. Teams compete in Piloting, Autonomous Flight, Teamwork, and Communications missions.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('register',null)">Register Your Team</button>
+        <button class="btn-outline" onclick="showPage('events',null)">View Events</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">42</div><div class="stat-lbl">TEAMS REGISTERED</div></div>
+        <div class="stat"><div class="stat-num">6</div><div class="stat-lbl">QUALIFYING EVENTS</div></div>
+        <div class="stat"><div class="stat-num">$200</div><div class="stat-lbl">SEASON FEE</div></div>
+        <div class="stat"><div class="stat-num">K–12</div><div class="stat-lbl">STUDENT AGES</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="two-col">
+      <div>
+        <div class="section-title">Four Missions</div>
+        <div class="section-sub">Every team competes across all disciplines</div>
+        <div class="mission-card"><span class="mission-icon">🕹️</span><div><div class="mission-title">Piloting</div><div class="mission-desc">Two teams fly together on the same field to maximize their combined score in real time.</div></div></div>
+        <div class="mission-card"><span class="mission-icon">🤖</span><div><div class="mission-title">Autonomous Flight</div><div class="mission-desc">Drone is programmed to operate entirely autonomously — no controller, pure code.</div></div></div>
+        <div class="mission-card"><span class="mission-icon">🤝</span><div><div class="mission-title">Teamwork</div><div class="mission-desc">Collaborative challenge requiring real-time coordination between team members.</div></div></div>
+        <div class="mission-card"><span class="mission-icon">📋</span><div><div class="mission-title">Communications</div><div class="mission-desc">Judges interview teams on their drone, code, logbook documentation, and season journey.</div></div></div>
+      </div>
+      <div>
+        <div class="section-title">Key Dates</div>
+        <div class="section-sub">2025–2026 competition season</div>
+        <div class="date-row"><div class="date-badge">AUG 1</div><div><div class="date-label">Events Posted</div><div class="date-desc">Qualifying events open for registration on FlightDay.</div></div></div>
+        <div class="date-row"><div class="date-badge">OCT 25</div><div><div class="date-label">First Scrimmage</div><div class="date-desc">Mighty Minds Invitational — Landover, MD. Open to all divisions.</div></div></div>
+        <div class="date-row"><div class="date-badge">NOV 8</div><div><div class="date-label">Qualifiers Begin</div><div class="date-desc">Local qualifying competitions run through April 2026.</div></div></div>
+        <div class="date-row"><div class="date-badge">DEC 19</div><div><div class="date-label">Registration Deadline</div><div class="date-desc">Season team registration closes for 2025–26.</div></div></div>
+        <div class="date-row"><div class="date-badge">MAR 2026</div><div><div class="date-label">Regional Championships</div><div class="date-desc">Mid-Atlantic Championship — top qualifying teams invited.</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EVENTS ============ -->
+<div id="page-events" class="page">
+  <div class="page-header">
+    <div class="ph-inner">
+      <h2>EVENTS</h2>
+      <p style="padding-bottom:28px;">2025–2026 season qualifying events, scrimmages, and championships</p>
+    </div>
+  </div>
+  <div class="section">
+    <div class="events-filters">
+      <button class="filter-btn active">All Events</button>
+      <button class="filter-btn">Qualifiers</button>
+      <button class="filter-btn">Scrimmages</button>
+      <button class="filter-btn">Championships</button>
+      <select class="div-select"><option>All Divisions</option><option>Middle School</option><option>High School</option></select>
+    </div>
+    <div class="events-grid">
+      <div class="event-card">
+        <div class="event-hd"><div class="ev-type">SCRIMMAGE</div><div class="ev-name">Mighty Minds Invitational</div><div class="ev-date">Oct 25, 2025</div></div>
+        <div class="event-body"><div class="ev-meta"><span><div class="ev-dot"></div>Landover, MD</span><span><div class="ev-dot"></div>MS + HS</span><span><div class="ev-dot"></div>Event fee: $40/team</span></div><div class="cap-bar"><div class="cap-fill" style="width:37%;background:#1D6DE8"></div></div><div class="cap-label">6/16 spots filled</div><button class="ev-btn">Register Team</button></div>
+      </div>
+      <div class="event-card">
+        <div class="event-hd"><div class="ev-type">QUALIFIER</div><div class="ev-name">PG County Open</div><div class="ev-date">Nov 8, 2025</div></div>
+        <div class="event-body"><div class="ev-meta"><span><div class="ev-dot"></div>Landover, MD</span><span><div class="ev-dot"></div>MS + HS</span><span><div class="ev-dot"></div>Event fee: $65/team</span></div><div class="cap-bar"><div class="cap-fill" style="width:75%;background:#D97706"></div></div><div class="cap-label">18/24 spots filled</div><button class="ev-btn">Register Team</button></div>
+      </div>
+      <div class="event-card">
+        <div class="event-hd"><div class="ev-type">QUALIFIER</div><div class="ev-name">DMV Regional Qualifier</div><div class="ev-date">Dec 6, 2025</div></div>
+        <div class="event-body"><div class="ev-meta"><span><div class="ev-dot"></div>Alexandria, VA</span><span><div class="ev-dot"></div>HS Only</span><span><div class="ev-dot"></div>Event fee: $75/team</span></div><div class="cap-bar"><div class="cap-fill" style="width:91%;background:#DC2626"></div></div><div class="cap-label">29/32 spots filled — almost full</div><button class="ev-btn">Register Team</button></div>
+      </div>
+      <div class="event-card">
+        <div class="event-hd"><div class="ev-type">QUALIFIER</div><div class="ev-name">NOVA Winter Classic</div><div class="ev-date">Jan 17, 2026</div></div>
+        <div class="event-body"><div class="ev-meta"><span><div class="ev-dot"></div>Fairfax, VA</span><span><div class="ev-dot"></div>MS Only</span><span><div class="ev-dot"></div>Event fee: $65/team</span></div><div class="cap-bar"><div class="cap-fill" style="width:42%;background:#1D6DE8"></div></div><div class="cap-label">10/24 spots filled</div><button class="ev-btn">Register Team</button></div>
+      </div>
+      <div class="event-card">
+        <div class="event-hd"><div class="ev-type">QUALIFIER</div><div class="ev-name">Baltimore Qualifier</div><div class="ev-date">Feb 7, 2026</div></div>
+        <div class="event-body"><div class="ev-meta"><span><div class="ev-dot"></div>Baltimore, MD</span><span><div class="ev-dot"></div>MS + HS</span><span><div class="ev-dot"></div>Event fee: $60/team</span></div><div class="cap-bar"><div class="cap-fill" style="width:20%;background:#1D6DE8"></div></div><div class="cap-label">4/20 spots filled</div><button class="ev-btn">Register Team</button></div>
+      </div>
+      <div class="event-card">
+        <div class="event-hd"><div class="ev-type">CHAMPIONSHIP</div><div class="ev-name">Mid-Atlantic Championship</div><div class="ev-date">Mar 21, 2026</div></div>
+        <div class="event-body"><div class="ev-meta"><span><div class="ev-dot"></div>Terre Haute, IN</span><span><div class="ev-dot"></div>MS + HS · Invite Only</span><span><div class="ev-dot"></div>Event fee: $120/team</span></div><div class="cap-bar"><div class="cap-fill" style="width:85%;background:#DC2626"></div></div><div class="cap-label">41/48 spots filled</div><button class="ev-btn full">By Invitation Only</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REGISTER ============ -->
+<div id="page-register" class="page">
+  <div class="page-header">
+    <div class="ph-inner">
+      <h2>TEAM REGISTRATION</h2>
+      <p>Register for the 2025–2026 FlightDay season</p>
+      <div class="steps-bar">
+        <div class="step-item active" id="step-tab-1"><div class="step-num">STEP 1</div><div class="step-label">Org & Team</div></div>
+        <div class="step-item" id="step-tab-2"><div class="step-num">STEP 2</div><div class="step-label">Students</div></div>
+        <div class="step-item" id="step-tab-3"><div class="step-num">STEP 3</div><div class="step-label">Waivers</div></div>
+        <div class="step-item" id="step-tab-4"><div class="step-num">STEP 4</div><div class="step-label">Payment</div></div>
+        <div class="step-item" id="step-tab-5"><div class="step-num">STEP 5</div><div class="step-label">Confirmation</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-wrap">
+    <!-- Step 1 -->
+    <div id="reg-step-1" class="form-card">
+      <div class="form-title">Organization & Team Info</div>
+      <div class="form-desc">Your school or organization registers one base number, then adds lettered teams (A, B, C…). Each team is typically 3–5 students.</div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">ORGANIZATION NAME</div><input class="form-input" value="Mighty Minds Foundation"/></div>
+        <div class="form-group"><div class="form-label">ORG TYPE</div><select class="form-select"><option>Nonprofit (501c3)</option><option>Public School</option><option>Private School</option><option>Community Group</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">PRIMARY CONTACT</div><input class="form-input" value="Devin Donnell"/></div>
+        <div class="form-group"><div class="form-label">CONTACT EMAIL</div><input class="form-input" value="dev@mightymindsfound.org"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">PHONE</div><input class="form-input" value="(202) 555-0189"/></div>
+        <div class="form-group"><div class="form-label">CITY / STATE</div><input class="form-input" value="Landover, MD"/></div>
+      </div>
+      <hr class="divider"/>
+      <div class="form-title" style="font-size:15px;margin-bottom:4px">Team Details</div>
+      <div class="form-desc" style="margin-bottom:16px">First team defaults to suffix "A". You can add more teams after checkout.</div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">TEAM NAME</div><input class="form-input" value="Mighty Rockets"/></div>
+        <div class="form-group"><div class="form-label">DISPLAY NAME (SHORT)</div><input class="form-input" value="MMF-001A"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">DIVISION</div><select class="form-select"><option>Middle School (grades 6–8)</option><option>High School (grades 9–12)</option></select></div>
+        <div class="form-group"><div class="form-label">COMPETITION DRONE</div><select class="form-select"><option>CoDrone EDU</option><option>CoDrone EDU (JROTC Edition)</option><option>Parrot Mambo</option></select></div>
+      </div>
+      <div class="form-actions">
+        <span style="font-size:12px;color:var(--muted)">Step 1 of 5</span>
+        <button class="btn-next" onclick="goStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="reg-step-2" class="form-card" style="display:none">
+      <div class="form-title">Student Roster</div>
+      <div class="form-desc">Add 3–5 students to your team. Each student will need a signed waiver from a parent or guardian before they can compete.</div>
+      <table class="stu-table">
+        <thead><tr><th>#</th><th>FULL NAME</th><th>GRADE</th><th>DATE OF BIRTH</th><th>ROLE</th></tr></thead>
+        <tbody>
+          <tr><td style="font-family:monospace;font-size:12px;color:var(--muted)">1</td><td>Jordan Williams</td><td>7th</td><td style="font-family:monospace;font-size:12px">2011-03-14</td><td><select class="form-select" style="width:auto;font-size:12px;padding:4px 8px"><option>Pilot</option><option>Co-Pilot</option><option>Observer</option><option>Programmer</option></select></td></tr>
+          <tr><td style="font-family:monospace;font-size:12px;color:var(--muted)">2</td><td>Amara Osei</td><td>7th</td><td style="font-family:monospace;font-size:12px">2011-08-22</td><td><select class="form-select" style="width:auto;font-size:12px;padding:4px 8px"><option>Co-Pilot</option><option>Pilot</option><option>Observer</option><option>Programmer</option></select></td></tr>
+          <tr><td style="font-family:monospace;font-size:12px;color:var(--muted)">3</td><td>Deshawn Carter</td><td>8th</td><td style="font-family:monospace;font-size:12px">2010-11-05</td><td><select class="form-select" style="width:auto;font-size:12px;padding:4px 8px"><option>Programmer</option><option>Pilot</option><option>Co-Pilot</option><option>Observer</option></select></td></tr>
+          <tr><td style="font-family:monospace;font-size:12px;color:var(--muted)">4</td><td>Sofia Reyes</td><td>8th</td><td style="font-family:monospace;font-size:12px">2010-06-18</td><td><select class="form-select" style="width:auto;font-size:12px;padding:4px 8px"><option>Observer</option><option>Pilot</option><option>Co-Pilot</option><option>Programmer</option></select></td></tr>
+        </tbody>
+      </table>
+      <button class="add-btn">+ Add Student</button>
+      <div class="form-actions">
+        <button class="btn-back" onclick="goStep(1)">← Back</button>
+        <button class="btn-next" onclick="goStep(3)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div id="reg-step-3" class="form-card" style="display:none">
+      <div class="form-title">Waivers & Consent</div>
+      <div class="form-desc">A parent or guardian must sign for each student under 18. All waivers are timestamped, stored securely, and can be downloaded at any time.</div>
+      <div class="waiver-box">
+        <strong>PARTICIPATION & LIABILITY WAIVER — FlightDay 2025–2026</strong><br/><br/>
+        By signing below, the parent/guardian acknowledges that drone competition involves inherent risks including but not limited to physical contact with drones, propellers, and field equipment. Participant agrees to follow all safety protocols established by FlightDay and the competing venue at all times.<br/><br/>
+        Parent/guardian grants FlightDay permission to use photographs and video footage of the participant for educational and promotional purposes. All media will be used responsibly and will not be sold to third parties.<br/><br/>
+        Participant and parent/guardian agree to the FlightDay Code of Conduct, including respectful behavior toward judges, volunteers, and competing teams. Violations may result in disqualification without refund.<br/><br/>
+        Medical Release: In the event of an emergency, FlightDay staff are authorized to seek emergency medical treatment for the participant if the guardian cannot be reached. This authorization remains valid for the full competition season.
+      </div>
+      <div class="student-waiver">
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">Jordan Williams — 7th Grade</div>
+        <div class="checkbox-row"><input type="checkbox" checked/><label>I have read and agree to the full waiver on behalf of this student</label></div>
+        <div class="checkbox-row"><input type="checkbox" checked/><label>I confirm I am the parent or legal guardian of this student</label></div>
+        <div class="sig-box">Signed: <span class="sig-name">Marcus Williams</span></div>
+      </div>
+      <div class="student-waiver">
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">Amara Osei — 7th Grade</div>
+        <div class="checkbox-row"><input type="checkbox" checked/><label>I have read and agree to the full waiver on behalf of this student</label></div>
+        <div class="checkbox-row"><input type="checkbox" checked/><label>I confirm I am the parent or legal guardian of this student</label></div>
+        <div class="sig-box">Signed: <span class="sig-name">Esi Osei</span></div>
+      </div>
+      <div class="student-waiver">
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">Deshawn Carter — 8th Grade</div>
+        <div class="checkbox-row"><input type="checkbox" checked/><label>I have read and agree to the full waiver on behalf of this student</label></div>
+        <div class="checkbox-row"><input type="checkbox" checked/><label>I confirm I am the parent or legal guardian of this student</label></div>
+        <div class="sig-box">Signed: <span class="sig-name">Damon Carter</span></div>
+      </div>
+      <div class="student-waiver">
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">Sofia Reyes — 8th Grade</div>
+        <div class="checkbox-row"><input type="checkbox" checked/><label>I have read and agree to the full waiver on behalf of this student</label></div>
+        <div class="checkbox-row"><input type="checkbox" checked/><label>I confirm I am the parent or legal guardian of this student</label></div>
+        <div class="sig-box">Signed: <span class="sig-name">Rosa Reyes</span></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-back" onclick="goStep(2)">← Back</button>
+        <button class="btn-next" onclick="goStep(4)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div id="reg-step-4" class="form-card" style="display:none">
+      <div class="form-title">Payment</div>
+      <div class="form-desc">Season registration fee plus your selected event. Additional event fees are paid when registering for future events.</div>
+      <div class="pay-summary">
+        <div class="pay-row"><span>Season Registration — MMF-001A</span><span>$200.00</span></div>
+        <div class="pay-row"><span>PG County Open (Nov 8)</span><span>$65.00</span></div>
+        <div class="pay-row"><span>Nonprofit Discount (10%)</span><span style="color:#059669">−$26.50</span></div>
+        <div class="pay-row"><span>Processing Fee</span><span>$7.89</span></div>
+        <div class="pay-row"><span>Total Due Today</span><span>$246.39</span></div>
+      </div>
+      <div class="card-badges"><span class="cb">VISA</span><span class="cb">MASTERCARD</span><span class="cb">AMEX</span><span class="cb">ACH</span></div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">CARDHOLDER NAME</div><input class="form-input" value="Devin Donnell"/></div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group"><div class="form-label">CARD NUMBER</div><input class="form-input" value="•••• •••• •••• 4242"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><div class="form-label">EXPIRY</div><input class="form-input" value="09/27"/></div>
+        <div class="form-group"><div class="form-label">CVV</div><input class="form-input" value="•••"/></div>
+      </div>
+      <div class="ssl-note">🔒 Payments processed securely via Stripe. FlightDay never stores card data.</div>
+      <div class="form-actions">
+        <button class="btn-back" onclick="goStep(3)">← Back</button>
+        <button class="btn-next" onclick="goStep(5)">Pay $246.39 →</button>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div id="reg-step-5" class="form-card success-card" style="display:none">
+      <div class="success-icon">✓</div>
+      <h2>Registration Complete!</h2>
+      <p>Your team has been registered for the 2025–2026 FlightDay season. A confirmation has been sent to dev@mightymindsfound.org.</p>
+      <div class="team-id-badge">MMF-001A</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn-next">Download Confirmation</button>
+        <button class="btn-back" onclick="goStep(1)">Register Another Team</button>
+      </div>
+      <div class="next-steps">
+        <div class="ns-title">WHAT'S NEXT</div>
+        <div class="ns-item">Your Regional Support Manager will reach out within 3 business days.</div>
+        <div class="ns-item">Complete drone setup and begin autonomous flight programming practice.</div>
+        <div class="ns-item">Register for additional qualifying events through the Events tab.</div>
+        <div class="ns-item">Logbook documentation should begin immediately — judges review it at every event.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="page-dashboard" class="page">
+  <div class="page-header">
+    <div class="ph-inner">
+      <h2>ADMIN DASHBOARD</h2>
+      <p style="padding-bottom:28px;">Season 2025–2026 · FlightDay Competition Platform</p>
+    </div>
+  </div>
+  <div class="section">
+    <div class="dash-metrics">
+      <div class="metric"><div class="metric-lbl">TEAMS REGISTERED</div><div class="metric-val">42</div><div class="metric-sub">+8 this week</div></div>
+      <div class="metric"><div class="metric-lbl">STUDENTS ENROLLED</div><div class="metric-val">189</div><div class="metric-sub">across all teams</div></div>
+      <div class="metric"><div class="metric-lbl">REVENUE COLLECTED</div><div class="metric-val">$9,240</div><div class="metric-sub">season total</div></div>
+      <div class="metric"><div class="metric-lbl">EVENTS POSTED</div><div class="metric-val">6</div><div class="metric-sub">2 upcoming</div></div>
+    </div>
+
+    <div class="tbl-card">
+      <div class="tbl-head">
+        <div class="tbl-title">Registered Teams</div>
+        <input class="tbl-search" placeholder="Search teams..."/>
+      </div>
+      <table class="data-tbl">
+        <thead><tr><th>TEAM ID</th><th>TEAM NAME</th><th>ORGANIZATION</th><th>DIV</th><th>STUDENTS</th><th>EVENT</th><th>PAYMENT</th><th>WAIVER</th></tr></thead>
+        <tbody>
+          <tr><td style="font-family:monospace;font-size:12px;color:#1D6DE8">MMF-001A</td><td style="font-weight:500">Mighty Rockets</td><td style="color:var(--muted);font-size:12px">Mighty Minds Foundation</td><td><span class="div-pill d-ms">MS</span></td><td style="text-align:center;font-family:monospace;font-size:12px">4</td><td style="font-size:12px;color:var(--muted)">PG County Open</td><td><span class="status-pill s-paid">paid</span></td><td><span class="status-pill s-paid">complete</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:12px;color:#1D6DE8">MMF-001B</td><td style="font-weight:500">Sky Strikers</td><td style="color:var(--muted);font-size:12px">Mighty Minds Foundation</td><td><span class="div-pill d-hs">HS</span></td><td style="text-align:center;font-family:monospace;font-size:12px">5</td><td style="font-size:12px;color:var(--muted)">DMV Regional</td><td><span class="status-pill s-paid">paid</span></td><td><span class="status-pill s-paid">complete</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:12px;color:#1D6DE8">DCS-002A</td><td style="font-weight:500">Digital Eagles</td><td style="color:var(--muted);font-size:12px">DC STEM Academy</td><td><span class="div-pill d-hs">HS</span></td><td style="text-align:center;font-family:monospace;font-size:12px">3</td><td style="font-size:12px;color:var(--muted)">PG County Open</td><td><span class="status-pill s-pending">pending</span></td><td><span class="status-pill s-paid">complete</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:12px;color:#1D6DE8">PGS-003A</td><td style="font-weight:500">Aerial Aces</td><td style="color:var(--muted);font-size:12px">PG STEM School</td><td><span class="div-pill d-ms">MS</span></td><td style="text-align:center;font-family:monospace;font-size:12px">5</td><td style="font-size:12px;color:var(--muted)">PG County Open</td><td><span class="status-pill s-paid">paid</span></td><td><span class="status-pill s-waiver">pending</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:12px;color:#1D6DE8">NOV-004A</td><td style="font-weight:500">NoVA Flyers</td><td style="color:var(--muted);font-size:12px">Nova Tech Academy</td><td><span class="div-pill d-hs">HS</span></td><td style="text-align:center;font-family:monospace;font-size:12px">4</td><td style="font-size:12px;color:var(--muted)">NOVA Winter Classic</td><td><span class="status-pill s-pending">pending</span></td><td><span class="status-pill s-paid">complete</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:12px;color:#1D6DE8">BAL-005A</td><td style="font-weight:500">Harbor Drones</td><td style="color:var(--muted);font-size:12px">Baltimore Prep</td><td><span class="div-pill d-ms">MS</span></td><td style="text-align:center;font-family:monospace;font-size:12px">3</td><td style="font-size:12px;color:var(--muted)">Baltimore Qualifier</td><td><span class="status-pill s-paid">paid</span></td><td><span class="status-pill s-paid">complete</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="bracket-card">
+      <div class="bracket-title">PG County Open — Live Bracket (MS Division)</div>
+      <div class="bracket">
+        <div class="b-col">
+          <div class="b-col-lbl">QUARTERFINALS</div>
+          <div class="match"><div class="mt win"><span>Mighty Rockets</span><span class="ms">88</span></div><div class="mt-div"></div><div class="mt lose"><span>Digital Eagles</span><span class="ms">71</span></div></div>
+          <div class="b-spacer"></div>
+          <div class="match"><div class="mt win"><span>Aerial Aces</span><span class="ms">95</span></div><div class="mt-div"></div><div class="mt lose"><span>Harbor Drones</span><span class="ms">60</span></div></div>
+          <div class="b-spacer"></div>
+          <div class="match"><div class="mt lose"><span>Sky Strikers</span><span class="ms">77</span></div><div class="mt-div"></div><div class="mt win"><span>NoVA Flyers</span><span class="ms">82</span></div></div>
+          <div class="b-spacer"></div>
+          <div class="match"><div class="mt win"><span>MMF-001B</span><span class="ms">91</span></div><div class="mt-div"></div><div class="mt lose"><span>DCS-002B</span><span class="ms">74</span></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:space-around;padding:30px 4px 0">
+          <div class="b-arrow">›</div>
+          <div class="b-arrow" style="margin-top:60px">›</div>
+        </div>
+        <div class="b-col">
+          <div class="b-col-lbl">SEMIFINALS</div>
+          <div style="margin-top:18px">
+            <div class="match"><div class="mt win"><span>Mighty Rockets</span><span class="ms">92</span></div><div class="mt-div"></div><div class="mt lose"><span>Aerial Aces</span><span class="ms">85</span></div></div>
+            <div style="height:116px"></div>
+            <div class="match"><div class="mt lose"><span>NoVA Flyers</span><span class="ms">78</span></div><div class="mt-div"></div><div class="mt win"><span>MMF-001B</span><span class="ms">88</span></div></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:center;padding:0 4px">
+          <div class="b-arrow" style="margin-top:20px">›</div>
+        </div>
+        <div class="b-col">
+          <div class="b-col-lbl">FINAL</div>
+          <div style="margin-top:86px">
+            <div class="match final"><div class="mt win"><span>Mighty Rockets</span><span class="ms" style="color:#1D6DE8">—</span></div><div class="mt-div"></div><div class="mt lose"><span>MMF-001B</span><span class="ms">—</span></div></div>
+            <div class="live-badge">⬤ IN PROGRESS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goStep(n) {
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById('reg-step-' + i).style.display = i === n ? 'block' : 'none';
+    const tab = document.getElementById('step-tab-' + i);
+    tab.className = 'step-item' + (i === n ? ' active' : i < n ? ' done' : '');
+  }
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>

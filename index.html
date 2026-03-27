@@ -176,6 +176,47 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#F4F4F2;color:#1a1a1a;min
 .b-spacer{height:74px}
 .live-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue);text-align:center;margin-top:6px;letter-spacing:0.5px}
 
+/* ACCOUNT PAGE */
+.account-grid{display:grid;grid-template-columns:320px 1fr;gap:24px}
+.account-card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:24px}
+.account-card-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px}
+.account-card-desc{font-size:13px;color:var(--muted);margin-bottom:20px}
+.reg-card{background:linear-gradient(135deg,var(--navy) 0%,#1a3a5c 100%);border:none}
+.reg-card-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.reg-icon{width:56px;height:56px;background:rgba(56,189,248,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center}
+.reg-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:1px;margin-bottom:4px}
+.reg-number{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:700;color:#fff;letter-spacing:1px}
+.reg-details{margin-bottom:20px}
+.reg-detail-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.1);font-size:13px}
+.reg-detail-row:last-child{border-bottom:none}
+.reg-detail-row span:first-child{color:rgba(255,255,255,0.5)}
+.reg-detail-row span:last-child{color:#fff}
+.reg-detail-row .status-pill,.reg-detail-row .div-pill{color:#fff}
+.btn-outline-dark{width:100%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;padding:10px 20px;border-radius:7px;cursor:pointer;transition:all 0.15s}
+.btn-outline-dark:hover{background:rgba(255,255,255,0.15)}
+.account-actions{display:flex;align-items:center;gap:16px;margin-top:20px}
+.save-status{font-size:13px;color:#059669}
+.teams-list{margin-bottom:16px}
+.team-row{display:flex;justify-content:space-between;align-items:center;padding:16px;background:var(--surface);border-radius:8px;margin-bottom:10px}
+.team-info{display:flex;align-items:center;gap:16px}
+.team-id{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;color:var(--blue)}
+.team-name{font-size:15px;font-weight:600;color:var(--text)}
+.team-meta{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);margin-top:4px}
+.team-actions{display:flex;gap:8px}
+.btn-sm{background:var(--blue);border:none;color:#fff;font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:500;padding:7px 14px;border-radius:5px;cursor:pointer}
+.btn-sm-outline{background:none;border:0.5px solid var(--border);color:var(--muted);font-family:'IBM Plex Sans',sans-serif;font-size:12px;padding:7px 14px;border-radius:5px;cursor:pointer}
+.account-tbl{margin-top:10px}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:0.5px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.setting-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px}
+.setting-desc{font-size:12px;color:var(--muted)}
+.toggle{position:relative;display:inline-block;width:44px;height:24px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:24px;transition:0.2s}
+.toggle-slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:0.2s}
+.toggle input:checked+.toggle-slider{background:var(--blue)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px)}
+
 /* PAGE VISIBILITY */
 .page{display:none}
 .page.active{display:block}
@@ -245,6 +286,15 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#F4F4F2;color:#1a1a1a;min
   .bracket-card{padding:16px}
   .bracket{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:16px}
 
+  /* Account */
+  .account-grid{grid-template-columns:1fr}
+  .team-row{flex-direction:column;align-items:flex-start;gap:14px}
+  .team-info{flex-direction:column;align-items:flex-start;gap:4px}
+  .team-actions{width:100%}
+  .team-actions button{flex:1}
+  .settings-row{flex-direction:column;align-items:flex-start;gap:12px}
+  .account-tbl{display:block;overflow-x:auto}
+
   /* Waivers */
   .student-waiver{padding:12px}
   .sig-box{flex-direction:column;align-items:flex-start;gap:4px;height:auto}
@@ -288,6 +338,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#F4F4F2;color:#1a1a1a;min
     <button class="nav-link active" onclick="showPage('home',this)">Home</button>
     <button class="nav-link" onclick="showPage('events',this)">Events</button>
     <button class="nav-link" onclick="showPage('register',this)">Register</button>
+    <button class="nav-link" onclick="showPage('account',this)">Account</button>
     <button class="nav-link" onclick="showPage('dashboard',this)">Admin</button>
   </div>
   <button class="nav-cta" onclick="showPage('register',null)">Register Team</button>
@@ -296,6 +347,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#F4F4F2;color:#1a1a1a;min
     <button class="nav-link" onclick="showPage('home',this);closeMobileNav()">Home</button>
     <button class="nav-link" onclick="showPage('events',this);closeMobileNav()">Events</button>
     <button class="nav-link" onclick="showPage('register',this);closeMobileNav()">Register</button>
+    <button class="nav-link" onclick="showPage('account',this);closeMobileNav()">Account</button>
     <button class="nav-link" onclick="showPage('dashboard',this);closeMobileNav()">Admin</button>
     <button class="nav-cta nav-cta-mobile" onclick="showPage('register',null);closeMobileNav()">Register Team</button>
   </div>
@@ -550,6 +602,162 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#F4F4F2;color:#1a1a1a;min
   </div>
 </div>
 
+<!-- ============ ACCOUNT ============ -->
+<div id="page-account" class="page">
+  <div class="page-header">
+    <div class="ph-inner">
+      <h2>MY ACCOUNT</h2>
+      <p style="padding-bottom:28px;">Manage your profile, teams, and registration details</p>
+    </div>
+  </div>
+  <div class="section">
+    <div class="account-grid">
+      <!-- Registration Card -->
+      <div class="account-card reg-card">
+        <div class="reg-card-header">
+          <div class="reg-icon">
+            <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
+              <circle cx="7" cy="7" r="3" fill="#38BDF8" opacity="0.8"/>
+              <circle cx="21" cy="7" r="3" fill="#38BDF8" opacity="0.8"/>
+              <circle cx="7" cy="21" r="3" fill="#38BDF8" opacity="0.8"/>
+              <circle cx="21" cy="21" r="3" fill="#38BDF8" opacity="0.8"/>
+              <rect x="10" y="10" width="8" height="8" rx="2" fill="#38BDF8"/>
+            </svg>
+          </div>
+          <div>
+            <div class="reg-label">REGISTRATION ID</div>
+            <div class="reg-number">MMF-001A</div>
+          </div>
+        </div>
+        <div class="reg-details">
+          <div class="reg-detail-row"><span>Status</span><span class="status-pill s-paid">Active</span></div>
+          <div class="reg-detail-row"><span>Season</span><span>2025–2026</span></div>
+          <div class="reg-detail-row"><span>Division</span><span class="div-pill d-ms">Middle School</span></div>
+          <div class="reg-detail-row"><span>Registered</span><span>Oct 15, 2025</span></div>
+        </div>
+        <button class="btn-outline-dark">Download Registration PDF</button>
+      </div>
+
+      <!-- Profile Form -->
+      <div class="account-card">
+        <div class="account-card-title">Profile Information</div>
+        <div class="account-card-desc">Update your contact details and organization info</div>
+
+        <div class="form-row">
+          <div class="form-group"><div class="form-label">FULL NAME</div><input class="form-input" value="Devin Donnell" id="profile-name"/></div>
+          <div class="form-group"><div class="form-label">EMAIL</div><input class="form-input" value="dev@mightymindsfound.org" id="profile-email"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><div class="form-label">PHONE</div><input class="form-input" value="(202) 555-0189" id="profile-phone"/></div>
+          <div class="form-group"><div class="form-label">ROLE</div><select class="form-select" id="profile-role"><option>Coach / Team Lead</option><option>Assistant Coach</option><option>Parent Volunteer</option><option>Organization Admin</option></select></div>
+        </div>
+        <hr class="divider"/>
+        <div class="form-row">
+          <div class="form-group"><div class="form-label">ORGANIZATION</div><input class="form-input" value="Mighty Minds Foundation" id="profile-org"/></div>
+          <div class="form-group"><div class="form-label">ORG TYPE</div><select class="form-select" id="profile-org-type"><option>Nonprofit (501c3)</option><option>Public School</option><option>Private School</option><option>Community Group</option></select></div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group"><div class="form-label">ADDRESS</div><input class="form-input" value="4500 Forbes Blvd, Landover, MD 20785" id="profile-address"/></div>
+        </div>
+        <div class="account-actions">
+          <button class="btn-next" onclick="saveProfile()">Save Changes</button>
+          <span class="save-status" id="save-status"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Teams Section -->
+    <div class="account-card" style="margin-top:24px">
+      <div class="account-card-title">My Teams</div>
+      <div class="account-card-desc">Teams registered under your organization</div>
+      <div class="teams-list">
+        <div class="team-row">
+          <div class="team-info">
+            <div class="team-id">MMF-001A</div>
+            <div class="team-name">Mighty Rockets</div>
+            <div class="team-meta"><span class="div-pill d-ms">MS</span><span>4 students</span></div>
+          </div>
+          <div class="team-actions">
+            <button class="btn-sm" onclick="editTeam('MMF-001A')">Edit Team</button>
+            <button class="btn-sm-outline">View Roster</button>
+          </div>
+        </div>
+        <div class="team-row">
+          <div class="team-info">
+            <div class="team-id">MMF-001B</div>
+            <div class="team-name">Sky Strikers</div>
+            <div class="team-meta"><span class="div-pill d-hs">HS</span><span>5 students</span></div>
+          </div>
+          <div class="team-actions">
+            <button class="btn-sm" onclick="editTeam('MMF-001B')">Edit Team</button>
+            <button class="btn-sm-outline">View Roster</button>
+          </div>
+        </div>
+      </div>
+      <button class="add-btn" onclick="showPage('register',null)">+ Register Another Team</button>
+    </div>
+
+    <!-- Event Registrations -->
+    <div class="account-card" style="margin-top:24px">
+      <div class="account-card-title">Event Registrations</div>
+      <div class="account-card-desc">Your upcoming and past competition events</div>
+      <table class="data-tbl account-tbl">
+        <thead><tr><th>EVENT</th><th>DATE</th><th>TEAM</th><th>STATUS</th><th></th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:500">PG County Open</td>
+            <td style="font-family:monospace;font-size:12px;color:var(--muted)">Nov 8, 2025</td>
+            <td><span class="div-pill d-ms">MMF-001A</span></td>
+            <td><span class="status-pill s-paid">Confirmed</span></td>
+            <td><button class="btn-sm-outline">Details</button></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500">DMV Regional Qualifier</td>
+            <td style="font-family:monospace;font-size:12px;color:var(--muted)">Dec 6, 2025</td>
+            <td><span class="div-pill d-hs">MMF-001B</span></td>
+            <td><span class="status-pill s-paid">Confirmed</span></td>
+            <td><button class="btn-sm-outline">Details</button></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500">NOVA Winter Classic</td>
+            <td style="font-family:monospace;font-size:12px;color:var(--muted)">Jan 17, 2026</td>
+            <td><span class="div-pill d-ms">MMF-001A</span></td>
+            <td><span class="status-pill s-pending">Pending Payment</span></td>
+            <td><button class="btn-sm">Pay Now</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Account Settings -->
+    <div class="account-card" style="margin-top:24px">
+      <div class="account-card-title">Account Settings</div>
+      <div class="account-card-desc">Security and notification preferences</div>
+      <div class="settings-row">
+        <div class="setting-info">
+          <div class="setting-title">Password</div>
+          <div class="setting-desc">Last changed 45 days ago</div>
+        </div>
+        <button class="btn-sm-outline">Change Password</button>
+      </div>
+      <div class="settings-row">
+        <div class="setting-info">
+          <div class="setting-title">Email Notifications</div>
+          <div class="setting-desc">Event reminders, registration updates, and announcements</div>
+        </div>
+        <label class="toggle"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div class="setting-info">
+          <div class="setting-title">SMS Notifications</div>
+          <div class="setting-desc">Competition day alerts and urgent updates</div>
+        </div>
+        <label class="toggle"><input type="checkbox"/><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ============ DASHBOARD ============ -->
 <div id="page-dashboard" class="page">
   <div class="page-header">
@@ -639,6 +847,21 @@ function toggleMobileNav() {
 
 function closeMobileNav() {
   document.getElementById('mobileNav').classList.remove('open');
+}
+
+function saveProfile() {
+  const status = document.getElementById('save-status');
+  status.textContent = 'Saving...';
+  status.style.color = 'var(--muted)';
+  setTimeout(() => {
+    status.textContent = 'Changes saved!';
+    status.style.color = '#059669';
+    setTimeout(() => { status.textContent = ''; }, 3000);
+  }, 800);
+}
+
+function editTeam(teamId) {
+  alert('Edit team: ' + teamId + '\n\nThis would open a team editor modal.');
 }
 
 function goStep(n) {

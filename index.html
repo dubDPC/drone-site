@@ -179,6 +179,92 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#F4F4F2;color:#1a1a1a;min
 /* PAGE VISIBILITY */
 .page{display:none}
 .page.active{display:block}
+
+/* MOBILE NAV */
+.nav-toggle{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;padding:8px}
+.nav-links-mobile{display:none;position:absolute;top:58px;left:0;right:0;background:var(--navy);padding:16px;flex-direction:column;gap:8px;border-top:1px solid rgba(255,255,255,0.1)}
+.nav-links-mobile.open{display:flex}
+.nav-cta-mobile{display:none}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  /* Nav */
+  .nav{padding:0 16px}
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .nav-toggle{display:block}
+  .nav-cta-mobile{display:block;width:100%;margin-top:8px}
+
+  /* Hero */
+  .hero{padding:48px 20px 56px}
+  .hero h1{font-size:40px}
+  .hero p{font-size:14px}
+  .hero-stats{flex-wrap:wrap;gap:24px;padding-top:28px;margin-top:40px}
+  .stat{padding:12px 20px;border-right:none;border-bottom:1px solid rgba(255,255,255,0.08);flex:1 1 40%}
+  .stat:nth-child(2),.stat:last-child{border-bottom:none}
+  .stat-num{font-size:32px}
+
+  /* Sections */
+  .section{padding:32px 16px}
+  .two-col{grid-template-columns:1fr;gap:32px}
+  .section-title{font-size:26px}
+
+  /* Page headers */
+  .page-header{padding:24px 16px 0}
+  .ph-inner h2{font-size:28px}
+  .steps-bar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .step-item{min-width:80px;padding:8px 12px 12px}
+  .step-label{font-size:11px}
+
+  /* Forms */
+  .form-wrap{padding:0 16px 40px;margin:24px auto}
+  .form-card{padding:20px}
+  .form-row{grid-template-columns:1fr}
+  .form-title{font-size:16px}
+  .form-actions{flex-direction:column;gap:12px}
+  .form-actions span{order:3;text-align:center}
+  .btn-next,.btn-back{width:100%}
+
+  /* Tables */
+  .stu-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .data-tbl{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl-head{flex-direction:column;gap:12px;align-items:stretch}
+  .tbl-search{width:100%}
+
+  /* Events */
+  .events-filters{flex-direction:column;align-items:stretch}
+  .div-select{margin-left:0;width:100%}
+  .events-grid{grid-template-columns:1fr}
+
+  /* Dashboard */
+  .dash-metrics{grid-template-columns:1fr 1fr;gap:10px}
+  .metric{padding:14px}
+  .metric-val{font-size:28px}
+
+  /* Bracket */
+  .bracket-card{padding:16px}
+  .bracket{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:16px}
+
+  /* Waivers */
+  .student-waiver{padding:12px}
+  .sig-box{flex-direction:column;align-items:flex-start;gap:4px;height:auto}
+
+  /* Success */
+  .success-card{padding:32px 16px}
+  .success-card h2{font-size:26px}
+  .team-id-badge{font-size:18px;padding:8px 18px}
+}
+
+@media(max-width:480px){
+  .hero h1{font-size:32px}
+  .hero-badge{font-size:10px;padding:4px 12px}
+  .hero-btns{flex-direction:column}
+  .btn-primary,.btn-outline{width:100%}
+  .stat{flex:1 1 100%}
+  .dash-metrics{grid-template-columns:1fr}
+  .nav-brand{font-size:18px}
+  .nav-brand svg{width:22px;height:22px}
+}
 </style>
 </head>
 <body>
@@ -205,6 +291,14 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#F4F4F2;color:#1a1a1a;min
     <button class="nav-link" onclick="showPage('dashboard',this)">Admin</button>
   </div>
   <button class="nav-cta" onclick="showPage('register',null)">Register Team</button>
+  <button class="nav-toggle" onclick="toggleMobileNav()">&#9776;</button>
+  <div class="nav-links-mobile" id="mobileNav">
+    <button class="nav-link" onclick="showPage('home',this);closeMobileNav()">Home</button>
+    <button class="nav-link" onclick="showPage('events',this);closeMobileNav()">Events</button>
+    <button class="nav-link" onclick="showPage('register',this);closeMobileNav()">Register</button>
+    <button class="nav-link" onclick="showPage('dashboard',this);closeMobileNav()">Admin</button>
+    <button class="nav-cta nav-cta-mobile" onclick="showPage('register',null);closeMobileNav()">Register Team</button>
+  </div>
 </nav>
 
 <!-- ============ HOME ============ -->
@@ -537,6 +631,14 @@ function showPage(id, btn) {
   document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   window.scrollTo(0, 0);
+}
+
+function toggleMobileNav() {
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+
+function closeMobileNav() {
+  document.getElementById('mobileNav').classList.remove('open');
 }
 
 function goStep(n) {
